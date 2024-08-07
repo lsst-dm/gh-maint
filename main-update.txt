@@ -1,0 +1,128 @@
+# Before:
+#  * eups
+#    + eups/pkgautoversion
+#    + eups/eupspkg.sh
+
+Step 1: fix GHAs and rename branch
+
+# Scripted updates
+# No PyGitHub API for branch rename
+r = session.post(
+    GITHUB_API_URL + f"/repos/{org}/{repo}/branches/master/rename",
+    json={"new_name":"main"}
+)
+r.raise_for_status()
+
+# Check r.default_branch
+if repo.default_branch != "main":
+    repo.edit(default_branch="main")
+
+# Look in .github/workflows/*
+(lint.yaml)
+
+Step 2: Update org default
+# Set org default to "main"
+
+Step 3: Update lsstsw and lsst_build
+
+#  * lsstsw
+#    + bin/utils.sh
+#    + bin/deploy
+#    + bin/rebuild
+#  * lsst_build
+#    + python/lsst/ci/models.py
+#    + python/lsst/ci/prepare.py
+#    + tests/test_productfetcher.py
+#    + Replace .travis.yml
+
+Step 4: Update jenkins-dm-jobs and build system
+
+# Build system
+#  * Jenkins triggers on master branch
+#    + build-codekit-triggers
+#    + build-newinstall-triggers
+#    + maybe build-tag-monger-triggers/build-gitlfs-server-triggers?
+#  * jenkins-dm-jobs
+#    + etc/sqre/config.yaml (lsst-sqre)
+#    + etc/scipipe/build_matrix.yaml
+#    + etc/scipipe/build_matrix_test.yaml
+#    + etc/scipipe/ap_verify.yaml
+#    + pipelines/*/*.groovy (branches, lsst-sqre branches)
+#    + etc/scipipe/verify_drp_metrics.yaml
+#    + jobs/build_newinstall_triggers.groovy
+#    + jobs/stack_os_matrix.groovy (doc)
+#    + jobs/test_stack_os_matrix.groovy (doc)
+#    + jobs/jenkins_ebs_snapshot.groovy (doc)
+#    + jobs/build_tag_monger_triggers.groovy
+#    + jobs/build_gitlfs_server_triggers.groovy
+#    + jobs/build_codekit_triggers.groovy
+#    ! build.gradle
+#    + jobs/verify_drp_metrics.groovy
+#    + jobs/documenteer.groovy
+#    + jobs/dax_matrix.groovy (doc)
+#    + jobs/build_publish.groovy (doc)
+#  * sqre-codekit
+#    + versiondb.py
+#    + tests/versiondb/test_manifest.py
+
+Step 5: Rename jenkins-master node
+
+# Rename jenkins-master node:
+#  * Jenkins/Nodes/jenkins-master (127.0.0.1)
+#  * Configure: change name, labels
+#  * pipelines/*/*.groovy (jenkins-master node)
+
+Step 6: Fix changelog
+
+#  * lsst_git_changelog
+#    + config.py
+#    + products.py
+#    + repository.py
+#    + eups.py
+#    + output.py
+#    + git_changelog.py
+
+Step 7: Fix doxygen
+
+#  * ci-scripts
+#    + lsstswBuild.sh
+#    + create_xlinkdocs.sh
+#    + Replace .travis.yml
+# * lsst/lsst:
+#    + Doxygen x_masterDoxyDoc to x_mainDoxyDoc
+
+Step 8: Fix newinstall references
+
+# lsst/lsst
+#  * Create (deprecated, legacy) master branch at main branch
+#  * Will not move afterwards
+#  * Documents:
+#    + newinstall from main
+
+Step 9: Code and document-building fixes
+
+# verify (doc, test_lsstsw.py)
+# scarlet
+# dm_OCPS
+# daf_butler (setup.py)
+# templates
+# dm_dev_guide (conf.py)
+# documenteer
+# lsst-texmf (TRAVIS_BRANCH)
+
+Step 10: Other documentation fixes
+
+# sconsUtils (doc)
+# dm_dev_guide
+# pipelines_lsst_io
+
+Step 11:
+
+# Update slack bots
+
+Future:
+
+# "master catalog"
+# "master calibration"
+# "master schema" (meas_algorithms, obs_base)
+# "master regular expression" (daf_butler)

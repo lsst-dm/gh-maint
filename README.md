@@ -1,2 +1,2 @@
 # gh-maint
-GitHub repo maintenance scripts
+These scripts perform various GitHub org/repo maintenance chores.
